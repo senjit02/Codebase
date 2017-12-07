@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:orientation="vertical" 
+    android:background="#D6D5CE">
+<RelativeLayout 
+   android:id="@+id/crossImageLayout" 
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:background="#797E80">    
+<ImageView
+        android:id="@+id/crossImage"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginRight="5dp"
+        android:layout_marginTop="5dp"
+        android:src="@android:drawable/ic_delete" />
+</RelativeLayout>
+<TextView
+    android:id="@+id/groupDescriptionView"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:layout_alignParentLeft="true"
+    android:layout_below="@+id/crossImageLayout"
+    android:layout_marginTop="1dp"
+    android:background="@android:color/darker_gray"
+    android:text="   Update group description" />
+
+<Button
+    android:id="@+id/submit"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_below="@+id/groupEstimatedCost"
+    android:layout_centerHorizontal="true"
+    android:layout_marginTop="38dp"
+    android:background="@drawable/sosbutton"
+    style="@style/commonButtonStyle"
+    android:text="UPDATE" />
+
+<EditText
+    android:id="@+id/groupDescription"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_below="@+id/groupDescriptionView"
+    android:layout_centerHorizontal="true"
+    android:layout_marginTop="26dp"
+    android:ems="10" />
+
+<EditText
+    android:id="@+id/groupEstimatedCost"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_below="@+id/groupDescription"
+    android:layout_centerHorizontal="true"
+    android:layout_marginTop="26dp"
+    android:inputType="number"
+    android:ems="10" />
+
+</RelativeLayout>

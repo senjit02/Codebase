@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.ishare.split.activity"
+    android:versionCode="1"
+    android:versionName="1.0" >
+
+    <uses-sdk
+        android:minSdkVersion="8"
+        android:targetSdkVersion="18" />
+
+    <application
+        android:allowBackup="true"
+        android:icon="@drawable/sns_icon"
+        android:label="@string/app_name"
+        android:theme="@style/AppTheme" >
+        <activity
+            android:name="com.ishare.split.activity.LoginActivity"
+            android:label="@string/app_name" >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name="com.ishare.split.activity.AdminActivity"
+            android:label="@string/title_activity_admin" >
+        </activity>
+        <activity
+            android:name="com.ishare.split.activity.AddGroupActivity"
+            android:label="@string/title_activity_add_group" >
+        </activity>
+        <activity
+            android:name="com.ishare.split.activity.AddMemberActivity"
+            android:label="@string/title_activity_add_member" >
+        </activity>
+        <activity
+            android:name="com.ishare.split.activity.ViewGroupActivity"
+            android:label="@string/title_activity_view_group" >
+        </activity>
+        <activity
+            android:name="com.ishare.split.activity.ViewReportActivity"
+            android:label="@string/title_activity_view_report" >
+        </activity>
+        <activity
+            android:name="com.ishare.split.activity.UserRegistrationActivity"
+            android:label="@string/title_activity_user_registration" >
+        </activity>
+        <activity
+            android:name="com.ishare.split.activity.AddExpenseActivity"
+            android:label="@string/title_activity_add_expense" >
+        </activity>
+        <activity
+            android:name="com.ishare.split.activity.ViewMemberActivity"
+            android:label="@string/title_activity_view_member" >
+        </activity>
+        <activity
+            android:name="com.ishare.split.activity.ExpenseHistoryActivity"
+            android:label="@string/title_activity_expense_history" >
+        </activity>
+        <activity
+            android:name="com.ishare.split.activity.ExpenseUpdateActivity"
+            android:label="@string/title_activity_expense_update" >
+        </activity>
+        <activity
+            android:name="com.ishare.split.activity.UpdateMemberActivity"
+            android:label="@string/title_activity_update_member" >
+        </activity>
+        <activity
+            android:name="com.ishare.split.activity.MailActivity"
+            android:label="@string/title_activity_mail" >
+        </activity>
+        <activity
+            android:name="com.ishare.split.activity.BaseActivity"
+            android:label="@string/title_activity_base" >
+        </activity>
+        <activity
+            android:name="com.ishare.split.activity.ViewMemberExpense"
+            android:label="@string/title_activity_view_member_expense" >
+        </activity>
+    </application>
+
+</manifest>

@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">Split-N-Share</string>
+    <string name="action_settings">Settings</string>
+    <string name="hello_world">Hello world!</string>
+    <string name="title_activity_admin">Split-N-Share | Home</string>
+    <string name="title_activity_add_group">Add Group</string>
+    <string name="title_activity_add_member">Add Member</string>
+    <string name="title_activity_view_group">View Group</string>
+    <string name="title_activity_view_report">View Report</string>
+    <string name="title_activity_user_registration">User Registration</string>
+    <string name="title_activity_add_expense">Add Expense</string>
+    <string name="title_activity_view_member">Member List</string>
+    <string name="title_activity_expense_history">Expense History</string>
+    <string name="title_activity_expense_update">Expense Update</string>
+    <string name="update"><u>Update</u></string>
+    <string name="title_activity_update_member">Update Member</string>
+    <string name="title_activity_mail">Send Mail</string>
+    <string name="footer_msg">Copyright © 2017 (V 2.1) - Prasenjit Mazumder</string>
+    <string name="title_activity_base">BaseActivity</string>
+    <string name="title_activity_view_member_expense">ViewMemberExpense</string>
+
+</resources>

@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:orientation="vertical" 
+    android:background="#D6D5CE">
+
+<RelativeLayout 
+   android:id="@+id/crossImageLayout" 
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:background="#797E80">    
+<ImageView
+        android:id="@+id/crossImage"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginRight="5dp"
+        android:layout_marginTop="5dp"
+        android:src="@android:drawable/ic_delete" />
+</RelativeLayout>
+<TextView
+    android:id="@+id/groupList"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:layout_alignParentLeft="true"
+    android:layout_below="@+id/crossImageLayout"
+    android:layout_marginTop="1dp"
+    android:textStyle="bold"
+    android:background="@android:color/darker_gray"
+    android:text="\n    List of Group(s) ! Select one of them\n    press VIEW to get the group details\n" />
+<RadioGroup 
+        android:id="@+id/groupListGroup"
+     	android:orientation="vertical"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/groupList"
+        android:layout_centerVertical="true"
+        android:layout_marginTop="20dp"/>
+<Button
+    android:id="@+id/submitPres"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_below="@+id/groupListGroup"
+    android:layout_centerHorizontal="true"
+    android:layout_marginTop="10dp"
+    android:background="@drawable/commonbutton"
+    style="@style/commonButtonStyle"
+    android:text="VIEW" />
+
+</RelativeLayout>

@@ -1,0 +1,57 @@
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+android:layout_width="match_parent"
+android:layout_height="match_parent"
+android:fillViewport="true"  >
+<RelativeLayout 
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:orientation="vertical" 
+    android:background="#D6D5CE">
+
+<RelativeLayout 
+   android:id="@+id/crossImageLayout" 
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:background="#797E80">    
+<ImageView
+        android:id="@+id/crossImage"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginRight="5dp"
+        android:layout_marginTop="5dp"
+        android:src="@android:drawable/ic_delete" />
+</RelativeLayout>
+<TextView
+    android:id="@+id/userListView"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:layout_alignParentLeft="true"
+    android:layout_below="@+id/crossImageLayout"
+    android:layout_marginTop="1dp"
+     android:textStyle="bold"
+     android:background="@android:color/darker_gray"
+    android:text="\n    List of users !\n\n    Select one of them\n" />
+<RadioGroup 
+        android:id="@+id/userListRadioGroup"
+     	android:orientation="vertical"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/userListView"
+        android:layout_centerVertical="true"
+        android:layout_marginTop="40dp"/>
+<Button
+    android:id="@+id/submitPres"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_below="@+id/userListRadioGroup"
+    android:layout_centerHorizontal="true"
+    android:layout_marginTop="15dp"
+    android:background="@drawable/sosbutton"
+    style="@style/commonButtonStyle"
+    android:text="ADD" />
+
+</RelativeLayout>
+</ScrollView>
