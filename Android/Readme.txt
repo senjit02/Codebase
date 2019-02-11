@@ -1,1 +1,1 @@
-This repository is for android code base
+This repository is for android code base.
