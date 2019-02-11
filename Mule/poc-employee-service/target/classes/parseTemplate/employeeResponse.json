@@ -1,0 +1,7 @@
+{
+"EmployeeResponse": {
+	"Status":"#[flowVars.status]",
+	"ResponseCode":"#[flowVars.code]",
+	"ResponseMessage":"#[flowVars.responsemsg]"
+	}
+}	

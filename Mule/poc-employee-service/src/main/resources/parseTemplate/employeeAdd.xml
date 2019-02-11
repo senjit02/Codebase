@@ -1,0 +1,11 @@
+<AddEmployee>
+	<Status>Success</Status>
+	<ResponseCode>200</ResponseCode>
+	<ResponseCode>Employee record successfully added</ResponseCode>
+	<Request>
+		<FirstName>#[flowVars.firstname]</FirstName>
+		<LastName>#[flowVars.lastname]</LastName>
+		<Email>#[flowVars.email]</Email>
+		<Gender>#[flowVars.gender]</Gender>
+	</Request>
+</AddEmployee>

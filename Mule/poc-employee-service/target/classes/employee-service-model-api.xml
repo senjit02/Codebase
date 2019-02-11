@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:json="http://www.mulesoft.org/schema/mule/json" xmlns:http="http://www.mulesoft.org/schema/mule/http" xmlns:tracking="http://www.mulesoft.org/schema/mule/ee/tracking" xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+	xmlns:spring="http://www.springframework.org/schema/beans" 
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-current.xsd
+http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-current.xsd
+http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/ee/tracking http://www.mulesoft.org/schema/mule/ee/tracking/current/mule-tracking-ee.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/json http://www.mulesoft.org/schema/mule/json/current/mule-json.xsd">
+    <context:property-placeholder location="application-local.properties"/>
+    <http:request-config name="HTTP_Request_Configuration" protocol="HTTPS" host="${employee.service.url}" port="${employee.service.https.port}" basePath="${employee.service.basepath}" doc:name="HTTP Request Configuration" connectionIdleTimeout="300000"/>
+    <flow name="employee-service-model-rs-api-getAllEmployee">
+        <logger message="#[flow.name] | IN | This will call external getEmployee API:: ${employee.service.url}${employee.service.basepath}/getAllEmployee" level="INFO" doc:name="ingest-interface | Logger" category="ingest-interface"/>
+        <http:request config-ref="HTTP_Request_Configuration" path="/getAllEmployee" method="GET" doc:name="HTTP - External API-Get Employees"/>
+        <logger message="#[flow.name] | IN | Response fetched :: #[message.payload]" level="INFO" doc:name="ingest-interface | Response" category="ingest-interface"/>
+        <json:json-to-object-transformer returnClass="java.util.HashMap" doc:name="JSON to Object"/>
+        <logger message="fetched #[message.payload.items]" level="INFO" doc:name="respone-interface | employee" category="respone-interface"/>
+        <set-payload value="#[message.payload.items]" doc:name="Set Payload"/>
+        <flow-ref name="employee-service-model-api-ObjectToJSON" doc:name="employee-service-model-api-ObjectToJSON"/>
+    </flow>
+    <flow name="employee-service-model-rs-api-AddEmployee">
+        <logger message="#[flow.name] | IN | This will call external addEmployee API:: ${employee.service.url}${employee.service.basepath}/addEmployee" level="INFO" category="ingest-interface" doc:name="ingest-interface | Logger"/>
+        <set-variable variableName="originalPayload" value="#[message.payload]" doc:name="Original Payload"/>
+        <json:json-to-object-transformer returnClass="java.util.HashMap" doc:name="JSON to Object"/>
+        <expression-component doc:name="Expression- Extract employee data from request payload"><![CDATA[flowVars.firstname=message.payload.firstname;
+flowVars.lastname=message.payload.lastname;
+flowVars.email=message.payload.email;
+flowVars.gender=message.payload.gender;]]></expression-component>
+        <set-payload value="{ &quot;firstname&quot;:&quot;#[flowVars.firstname]&quot;, &quot;lastname&quot;:&quot;#[flowVars.lastname]&quot;, &quot;email&quot;:&quot;#[flowVars.email]&quot;, &quot;gender&quot;:&quot;#[flowVars.gender]&quot; }" doc:name="Set Payload for API call"/>
+        <byte-array-to-string-transformer mimeType="application/json" doc:name="Byte Array to String"/>
+        <logger message="payload is #[message.payload] || #[payload]" level="INFO" doc:name="Logger"/>
+        <http:request config-ref="HTTP_Request_Configuration" path="/addEmployee" method="POST" doc:name="HTTP - External API-Add Employee"/>
+        <parse-template location="parseTemplate/employeeAdd.xml" doc:name="Parse Template"/>
+        <byte-array-to-string-transformer mimeType="application/xml" doc:name="Byte Array to String"/>
+    </flow>
+    <flow name="employee-service-model-rs-api-DeleteEmployee">
+        <logger message="#[flow.name] | IN | This will call external deleteEmployee API:: ${employee.service.url}${employee.service.basepath}/deleteEmployee/#[flowVars.employeeID]" level="INFO" category="ingest-interface" doc:name="ingest-interface | Logger"/>
+        <set-variable variableName="empID" value="#[flowVars.employeeID]" doc:name="Employee ID"/>
+        <http:request config-ref="HTTP_Request_Configuration" path="/getEmployee/#[flowVars.employeeID]" method="GET" doc:name="HTTP - External API-Get Employee By ID"/>
+        <json:json-to-object-transformer returnClass="java.util.HashMap" doc:name="JSON to Object"/>
+        <logger message="Fetched Employee##   #[message.payload.items]" level="INFO" doc:name="Logger"/>
+        <expression-component doc:name="Expression"><![CDATA[flowVars.firstname="No data found";
+flowVars.lastname="No data found";
+flowVars.email="No data found";
+flowVars.gender="No data found";
+flowVars.status="Failed";
+flowVars.code="99";
+flowVars.responsemsg="Deletion failed | Employee not found";]]></expression-component>
+        <choice doc:name="Choice">
+            <when expression="#[message.payload.items.size()==0]">
+                <logger message="No record found for employee id #[flowVars.employeeID]" level="INFO" doc:name="Logger | No record"/>
+            </when>
+            <otherwise>
+                <logger message="Employee found for #[flowVars.employeeID]" level="INFO" doc:name="Logger"/>
+                <expression-component doc:name="Expression"><![CDATA[flowVars.firstname=message.payload.items[0].firstname;
+flowVars.lastname=message.payload.items[0].lastname;
+flowVars.email=message.payload.items[0].email;
+flowVars.gender=message.payload.items[0].gender;
+flowVars.status="Success";
+flowVars.code="200";
+flowVars.responsemsg="Employee record deleted for following record";]]></expression-component>
+                <flow-ref name="employee-service-model-api-delete-employee" doc:name="employee-service-model-api-delete-employee"/>
+            </otherwise>
+        </choice>
+        <parse-template location="parseTemplate/employeeDelete.xml" doc:name="Parse Template"/>
+        <byte-array-to-string-transformer mimeType="application/xml" doc:name="Byte Array to String"/>
+    </flow>
+    <flow name="employee-service-model-api-delete-employee">
+        <logger message="Calling ${employee.service.url}${employee.service.basepath}/deleteEmployee/#[flowVars.employeeID]" level="INFO" doc:name="Logger"/>
+        <http:request config-ref="HTTP_Request_Configuration" path="/deleteEmployee/#[flowVars.empID]" method="POST" doc:name="HTTP" parseResponse="false">
+            <http:success-status-code-validator values="0..599"/>
+        </http:request>
+        <http:request config-ref="HTTP_Request_Configuration" path="/deleteEmployee/#[flowVars.empID]" method="POST" doc:name="HTTP_Delete Employee"/>
+        <logger message="Deleted successfully for #[flowVars.employeeID]" level="INFO" doc:name="Logger"/>
+    </flow>
+    <flow name="employee-service-model-rs-api-GetEmployeeByID">
+        <logger message="#[flow.name] | IN | This will call external getEmployeeByID API:: ${employee.service.url}${employee.service.basepath}/getEmployee/#[flowVars.employeeID]" level="INFO" category="ingest-interface" doc:name="ingest-interface | Logger"/>
+        <http:request config-ref="HTTP_Request_Configuration" path="/getEmployee/#[flowVars.employeeID]" method="GET" doc:name="HTTP - External API-Get Employee By ID"/>
+        <logger message="#[flow.name] | IN | Fetched Employee   #[message.payload.items]" level="INFO" category="ingest-interface" doc:name="ingest-interface | Response"/>
+        <json:json-to-object-transformer returnClass="java.util.HashMap" doc:name="JSON to Object"/>
+        <choice doc:name="Choice">
+        <when expression="#[message.payload.items.size()==0]">
+                <logger message="No record found for employee id #[flowVars.employeeID]" level="INFO" doc:name="Logger"/>
+                <expression-component doc:name="Expression"><![CDATA[flowVars.status="Failed";
+flowVars.code="100";
+flowVars.responsemsg="No employee found with ID " + flowVars.employeeID;]]></expression-component>
+                <parse-template location="parseTemplate/employeeResponse.json" doc:name="Parse Template"/>
+                <byte-array-to-string-transformer mimeType="application/json" doc:name="Byte Array to String"/>
+            </when>
+            <otherwise>
+                <logger message="fetched #[message.payload.items[0]]" level="INFO" category="respone-interface" doc:name="respone-interface | employee"/>
+                <set-payload value="#[message.payload.items[0]]" doc:name="Set Payload"/>
+                <flow-ref name="employee-service-model-api-ObjectToJSON" doc:name="employee-service-model-api-ObjectToJSON"/>
+            </otherwise>
+        </choice>
+
+    </flow>
+    <sub-flow name="employee-service-model-api-ObjectToJSON">
+        <json:object-to-json-transformer doc:name="Object to JSON"/>
+        <byte-array-to-string-transformer mimeType="application/json" doc:name="Byte Array to String"/>
+    </sub-flow>
+</mule>

@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mule xmlns:context="http://www.springframework.org/schema/context" xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:apikit="http://www.mulesoft.org/schema/mule/apikit" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:http="http://www.mulesoft.org/schema/mule/http" xmlns:spring="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/apikit http://www.mulesoft.org/schema/mule/apikit/current/mule-apikit.xsd
+http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.1.xsd
+http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-current.xsd">
+    <http:listener-config name="employee-service-httpListenerConfig" host="0.0.0.0" port="${http.port}" doc:name="HTTP Listener Configuration" />
+    <apikit:config name="employee-service-config" raml="employee-service.raml" consoleEnabled="true" doc:name="Router" keepRamlBaseUri="true"/>
+    <context:property-placeholder location="application-local.properties"/>
+    <flow name="employee-service-main">
+        <http:listener config-ref="employee-service-httpListenerConfig" path="/api/*" doc:name="HTTP" />
+        <apikit:router config-ref="employee-service-config" doc:name="APIkit Router" />
+        <exception-strategy ref="employee-service-apiKitGlobalExceptionMapping" doc:name="Reference Exception Strategy" />
+    </flow>
+    <flow name="employee-service-console">
+        <http:listener config-ref="employee-service-httpListenerConfig" path="/console/*" doc:name="HTTP" />
+        <apikit:console config-ref="employee-service-config" doc:name="APIkit Console" />
+    </flow>
+    <flow name="get:/employeeServiceAPI:employee-service-config">
+        <set-payload value="this is employee service" doc:name="Set Payload" />
+    </flow>
+    <flow name="get:/employeeServiceAPI/getEmployee:employee-service-config">
+        <flow-ref name="employee-service-model-rs-api-getAllEmployee" doc:name="employee-service-model-rs-api-getAllEmployee"/>
+        <set-payload value="#[message.payload]" doc:name="Set Payload"/>
+    </flow>
+    <flow name="get:/employeeServiceAPI/getEmployeeByName:employee-service-config">
+        <set-payload value="This will display employee by name" doc:name="Set Payload" />
+    </flow>
+    <flow name="get:/employeeServiceAPI/getEmployeeByID/{employeeID}:employee-service-config">
+        <logger message="getting record for #[message.inboundProperties.'http.uri.params'.employeeID]" level="INFO" doc:name="Logger"/>
+        <set-variable variableName="employeeID" value="#[message.inboundProperties.'http.uri.params'.employeeID]" doc:name="Set EmployeeID"/>
+        <flow-ref name="employee-service-model-rs-api-GetEmployeeByID" doc:name="employee-service-model-rs-api-GetEmployeeByID"/>
+        <set-payload value="#[message.payload]" doc:name="Set Payload" />
+    </flow>
+    <flow name="post:/employeeServiceAPI/addEmployee:employee-service-config">
+        <flow-ref name="employee-service-model-rs-api-AddEmployee" doc:name="employee-service-model-rs-api-AddEmployee"/>
+        <set-payload value="#[message.payload]" doc:name="Set Payload" />
+    </flow>
+    <flow name="post:/employeeServiceAPI/deleteEmployee/{employeeID}:employee-service-config">
+        <logger message="Deleting record for #[message.inboundProperties.'http.uri.params'.employeeID]" level="INFO" doc:name="Logger"/>
+        <set-variable variableName="employeeID" value="#[message.inboundProperties.'http.uri.params'.employeeID]" doc:name="Set EmployeeID"/>
+        <flow-ref name="employee-service-model-rs-api-DeleteEmployee" doc:name="employee-service-model-api-delete-employee"/>
+        <set-payload value="#[message.payload]" doc:name="Set Payload"/>
+    </flow>
+    <apikit:mapping-exception-strategy name="employee-service-apiKitGlobalExceptionMapping">
+        <apikit:mapping statusCode="404">
+            <apikit:exception value="org.mule.module.apikit.exception.NotFoundException" />
+            <set-property propertyName="Content-Type" value="application/json" doc:name="Property" />
+            <set-payload value="{ &quot;message&quot;: &quot;Resource not found&quot; }" doc:name="Set Payload" />
+        </apikit:mapping>
+        <apikit:mapping statusCode="405">
+            <apikit:exception value="org.mule.module.apikit.exception.MethodNotAllowedException" />
+            <set-property propertyName="Content-Type" value="application/json" doc:name="Property" />
+            <set-payload value="{ &quot;message&quot;: &quot;Method not allowed&quot; }" doc:name="Set Payload" />
+        </apikit:mapping>
+        <apikit:mapping statusCode="415">
+            <apikit:exception value="org.mule.module.apikit.exception.UnsupportedMediaTypeException" />
+            <set-property propertyName="Content-Type" value="application/json" doc:name="Property" />
+            <set-payload value="{ &quot;message&quot;: &quot;Unsupported media type&quot; }" doc:name="Set Payload" />
+        </apikit:mapping>
+        <apikit:mapping statusCode="406">
+            <apikit:exception value="org.mule.module.apikit.exception.NotAcceptableException" />
+            <set-property propertyName="Content-Type" value="application/json" doc:name="Property" />
+            <set-payload value="{ &quot;message&quot;: &quot;Not acceptable&quot; }" doc:name="Set Payload" />
+        </apikit:mapping>
+        <apikit:mapping statusCode="400">
+            <apikit:exception value="org.mule.module.apikit.exception.BadRequestException" />
+            <set-property propertyName="Content-Type" value="application/json" doc:name="Property" />
+            <set-payload value="{ &quot;message&quot;: &quot;Bad request&quot; }" doc:name="Set Payload" />
+        </apikit:mapping>
+    </apikit:mapping-exception-strategy>
+</mule>

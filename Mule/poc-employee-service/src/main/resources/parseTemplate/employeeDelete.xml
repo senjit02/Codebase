@@ -1,0 +1,11 @@
+<DeleteEmployee>
+	<Status>#[flowVars.status]</Status>
+	<ResponseCode>#[flowVars.code]</ResponseCode>
+	<ResponseMessage>#[flowVars.responsemsg]</ResponseMessage>
+	<Employee>
+		<FirstName>#[flowVars.firstname]</FirstName>
+		<LastName>#[flowVars.lastname]</LastName>
+		<Email>#[flowVars.email]</Email>
+		<Gender>#[flowVars.gender]</Gender>
+	</Employee>
+</DeleteEmployee>

@@ -1,0 +1,54 @@
+#%RAML 1.0
+title: Employee-service
+version: 1.0
+/employeeServiceAPI:
+  /getEmployee:
+    get:
+      description: This will get all employees
+      responses:
+        200:
+          body:
+            application/json:
+        500:
+          description: Bad request
+  /getEmployeeByID:
+    /{employeeID}:
+      get:
+        description: This will get employee by empID
+        responses:
+          200:
+            body:
+              application/json:
+          500:
+            description: Bad request
+  /getEmployeeByName:
+    get:
+      description: This will get employee by name
+      responses:
+        200:
+          body:
+            application/json:
+        500:
+          description: Bad request        
+  /addEmployee:
+    post:
+      description:  This will add an employee
+      responses:
+        200:
+          body:
+            application/xml:
+        500:
+          description: Bad request   
+  /deleteEmployee:
+    /{employeeID}:
+      post:
+        description: This will delete employee
+        responses:
+          200:
+            body:
+              application/xml:
+          500:
+            description: Bad request
+
+
+   
